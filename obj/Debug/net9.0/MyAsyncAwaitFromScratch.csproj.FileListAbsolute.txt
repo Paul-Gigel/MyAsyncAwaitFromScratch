@@ -1,0 +1,14 @@
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\bin\Debug\net9.0\MyAsyncAwaitFromScratch.exe
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\bin\Debug\net9.0\MyAsyncAwaitFromScratch.deps.json
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\bin\Debug\net9.0\MyAsyncAwaitFromScratch.runtimeconfig.json
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\bin\Debug\net9.0\MyAsyncAwaitFromScratch.dll
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\bin\Debug\net9.0\MyAsyncAwaitFromScratch.pdb
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.AssemblyInfoInputs.cache
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.AssemblyInfo.cs
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.csproj.CoreCompileInputs.cache
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.dll
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\refint\MyAsyncAwaitFromScratch.dll
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.pdb
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.genruntimeconfig.cache
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\ref\MyAsyncAwaitFromScratch.dll
