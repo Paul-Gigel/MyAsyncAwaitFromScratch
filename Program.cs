@@ -1,16 +1,31 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections;
+using System.Collections.Concurrent;
+using System.Dynamic;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 
 // See https://aka.ms/new-console-template for more information
-Console.Write("Hello, ");
-MyTask.Delay(10000).ContinueWith(delegate
+
+PrintAsync().Wait();
+
+static async Task PrintAsync()
 {
-    Console.Write("World!");
-    return MyTask.Delay(10000).ContinueWith(delegate
+    for (int i = 0; ; i++)
     {
-        Console.Write("World!");
-    });
-}).Wait();
+        await MyTask.Delay(0);
+        Console.WriteLine(i);
+    }
+}
+
+// Console.Write("Hello, ");
+// MyTask.Delay(2000).ContinueWith(delegate
+// {
+//     Console.Write("World!");
+//     return MyTask.Delay(2000);
+// }).ContinueWith(delegate
+// {
+//     Console.Write("World!");
+// }).Wait();
 
 //AsyncLocal<int> myValue = new();
 //List<MyTask> tasks = new();
@@ -32,6 +47,19 @@ class MyTask
     private Exception? _exception;
     private Action? _continuation;
     private ExecutionContext? _context;
+
+    public struct Awaiter(MyTask t) : INotifyCompletion
+    {
+        public Awaiter GetAwaiter() => this;
+
+        public bool IsCompleted => t.IsCompleted;
+
+        public void OnCompleted(Action continuation) => t.ContinueWith(continuation);
+
+        public void GetResult() => t.Wait();
+    }
+
+    public Awaiter GetAwaiter() => new(this);
     public bool IsCompleted
     {
         get
@@ -230,6 +258,36 @@ class MyTask
     {
         MyTask t = new();
         new Timer(_ => t.SetResult()).Change(timeout, -1);
+        return t;
+    }
+
+    public static MyTask Iterate(IEnumerable<MyTask> tasks)
+    {
+        MyTask t = new();
+
+        IEnumerator<MyTask> e = tasks.GetEnumerator();
+
+        void MoveNext()
+        {
+            try
+            {
+                if (e.MoveNext())
+                {
+                    MyTask next = e.Current;
+                    next.ContinueWith(MoveNext);
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                t.SetException(e);
+                return;
+            }
+            t.SetResult();
+        }
+
+        MoveNext();
+
         return t;
     }
 }
