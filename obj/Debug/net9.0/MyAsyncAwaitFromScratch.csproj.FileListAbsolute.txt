@@ -12,3 +12,4 @@ C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\refint\MyA
 C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.pdb
 C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.genruntimeconfig.cache
 C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\ref\MyAsyncAwaitFromScratch.dll
+C:\Users\pgigel\source\repos\MyAsyncAwaitFromScratch\obj\Debug\net9.0\MyAsyncAwaitFromScratch.sourcelink.json

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MyAsyncAwaitFromScratch")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+615a262e785cb81898d9250f423cb679c6d3093b")]
 [assembly: System.Reflection.AssemblyProductAttribute("MyAsyncAwaitFromScratch")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MyAsyncAwaitFromScratch")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

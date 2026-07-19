@@ -2,21 +2,29 @@
 using System.Runtime.ExceptionServices;
 
 // See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
-
-AsyncLocal<int> myValue = new();
-List<MyTask> tasks = new();
-for (int i = 0; i < 1000; i++)
+Console.Write("Hello, ");
+MyTask.Delay(10000).ContinueWith(delegate
 {
-    myValue.Value = i;
-    tasks.Add(MyTask.Run(delegate
+    Console.Write("World!");
+    return MyTask.Delay(10000).ContinueWith(delegate
     {
-        Console.WriteLine(myValue.Value);
-        //Thread.Sleep(1000);
-    }));
-}
-foreach (var t in tasks)
-    t.Wait();
+        Console.Write("World!");
+    });
+}).Wait();
+
+//AsyncLocal<int> myValue = new();
+//List<MyTask> tasks = new();
+//for (int i = 0; i < 1000; i++)
+//{
+//    myValue.Value = i;
+//    tasks.Add(MyTask.Run(delegate
+//    {
+//        Console.WriteLine(myValue.Value);
+//        //Thread.Sleep(1000);
+//    }));
+//}
+//
+//MyTask.WhenAll(tasks).Wait();
 
 class MyTask
 {
@@ -91,18 +99,81 @@ class MyTask
             ExceptionDispatchInfo.Throw(_exception);
         }
     }
-    public void ContinueWith(Action action)
+    public MyTask ContinueWith(Action action)
     {
-        lock (this)
+        MyTask t = new();
+
+        Action callback = () =>
         {
-            if (!_completed)
+            try
             {
-                MyThreadPool.QueueUserWorkItem(action);
+                action();
+            }
+            catch (Exception e)
+            {
+                t.SetException(e);
                 return;
             }
-            _continuation = action;
-            _context = ExecutionContext.Capture();
+
+            t.SetResult();
+        };
+
+        lock (this)
+        {
+            if (_completed)
+            {
+                MyThreadPool.QueueUserWorkItem(callback);
+            }
+            else
+            {
+                _continuation = callback;
+                _context = ExecutionContext.Capture();
+            }
         }
+        return t;
+    }
+
+    public MyTask ContinueWith(Func<MyTask> action)
+    {
+        MyTask t = new();
+
+        Action callback = () =>
+        {
+            try
+            {
+                MyTask next = action();
+                next.ContinueWith(delegate
+                {
+                    if (next._exception is not null)
+                    {
+                        t.SetException(next._exception);
+                    }
+                    else
+                    {
+                        t.SetResult();
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                t.SetException(e);
+                return;
+            }
+        };
+
+        lock (this)
+        {
+            if (_completed)
+            {
+                MyThreadPool.QueueUserWorkItem(callback);
+            }
+            else
+            {
+                _continuation = callback;
+                _context = ExecutionContext.Capture();
+            }
+        }
+        return t;
     }
 
     public static MyTask Run(Action action)
@@ -126,6 +197,41 @@ class MyTask
 
         return t;
     }
+
+    public static MyTask WhenAll(List<MyTask> tasks)
+    {
+        MyTask t = new();
+
+        if (tasks.Count <= 0)
+        {
+            t.SetResult();
+        }
+        else
+        {
+            int remaining = tasks.Count;
+
+            Action continuation = () =>
+            {
+                if (Interlocked.Decrement(ref remaining) == 0)
+                {
+                    // Exceptions ?
+                    t.SetResult();
+                }
+            };
+
+            foreach (MyTask task in tasks)
+                task.ContinueWith(continuation);
+        }
+
+        return t;
+    }
+
+    public static MyTask Delay(int timeout)
+    {
+        MyTask t = new();
+        new Timer(_ => t.SetResult()).Change(timeout, -1);
+        return t;
+    }
 }
 
 static class MyThreadPool
@@ -141,7 +247,7 @@ static class MyThreadPool
 
     static MyThreadPool()
     {
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 2; i++)
         {
             new Thread(() =>
             {
